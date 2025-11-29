@@ -75,9 +75,36 @@ button {
   background-color: var(--mono-bg);
 }
 
+.mono-footer {
+  border-top: 1px solid var(--mono-border);
+  padding: 16px 32px;
+  background-color: var(--mono-bg);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.mono-footer__brand {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mono-footer__meta {
+  color: var(--mono-muted);
+  font-size: 0.75rem;
+}
+
 @media (max-width: 768px) {
   .mono-content {
     padding: 24px 20px 32px;
+  }
+
+  .mono-footer {
+    padding: 16px 20px;
   }
 
   .mono-auth {
@@ -239,6 +266,43 @@ button {
 .mono-panel--soft {
   border-color: var(--mono-soft-border);
   background-color: var(--mono-light);
+}
+
+.mono-roster-list {
+  border: 1px solid var(--mono-border);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.mono-roster-list__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mono-soft-border);
+}
+
+.mono-roster-list__item:last-child {
+  border-bottom: none;
+}
+
+.mono-roster-list__item.is-active {
+  background-color: var(--mono-light);
+}
+
+.mono-roster-list__name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.mono-roster-list__meta {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--mono-muted);
 }
 
 .mono-metric__value {

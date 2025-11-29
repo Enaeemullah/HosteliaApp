@@ -6,6 +6,7 @@ import { HostelSelector } from '../components/HostelSelector';
 import api from '../api/client';
 import { Fee, Student, Receipt } from '../types';
 import { DataTable } from '../components/common/DataTable';
+import { formatCurrency } from '../utils/formatCurrency';
 
 const FeePage = () => {
   const { hostels } = useHostels();
@@ -14,6 +15,7 @@ const FeePage = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const form = useForm<{ studentId: string; amount: number; dueDate: string }>();
+  const selectedStudentId = form.watch('studentId');
 
   useEffect(() => {
     if (hostels.length && !selectedHostel) {
@@ -149,6 +151,42 @@ const FeePage = () => {
                   Assign fee
                 </button>
               </form>
+              <div className="mono-stack mono-stack--tight">
+                <div>
+                  <p className="mono-label">Students</p>
+                  <p className="mono-subtitle" style={{ marginTop: 0 }}>
+                    Use the quick list to populate the selector above.
+                  </p>
+                </div>
+                {students.length ? (
+                  <ul className="mono-roster-list">
+                    {students.map((student) => (
+                      <li
+                        key={student.id}
+                        className={['mono-roster-list__item', selectedStudentId === student.id ? 'is-active' : '']
+                          .join(' ')
+                          .trim()}
+                      >
+                        <div>
+                          <p className="mono-roster-list__name">{student.name}</p>
+                          <p className="mono-roster-list__meta">
+                            {student.rollNumber} - {formatCurrency(student.monthlyFee)}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          className="mono-text-button"
+                          onClick={() => form.setValue('studentId', student.id)}
+                        >
+                          Use
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="mono-empty">No students yet</div>
+                )}
+              </div>
             </div>
 
             {receipt && (
