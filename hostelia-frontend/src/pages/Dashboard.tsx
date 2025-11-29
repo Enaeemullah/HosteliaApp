@@ -7,6 +7,7 @@ import { HostelSelector } from '../components/HostelSelector';
 import { MetricCard } from '../components/common/MetricCard';
 import { DataTable } from '../components/common/DataTable';
 import { ReportButtons } from '../components/ReportButtons';
+import { formatCurrency } from '../utils/formatCurrency';
 
 const Dashboard = () => {
   const { hostels, loading } = useHostels();
@@ -63,7 +64,7 @@ const Dashboard = () => {
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <MetricCard label="Total Students" value={summary.totalStudents} />
             <MetricCard label="Total Rooms" value={summary.totalRooms} helper={`${summary.occupiedRooms} occupied`} />
-            <MetricCard label="Pending Fees" value={summary.pendingFees} helper={`$${summary.pendingAmount.toFixed(2)}`} />
+            <MetricCard label="Pending Fees" value={summary.pendingFees} helper={formatCurrency(summary.pendingAmount)} />
             <MetricCard label="Vacant Rooms" value={summary.vacantRooms} helper="Ready for allocation" />
           </div>
         )}
@@ -125,7 +126,7 @@ const Dashboard = () => {
               {
                 key: 'monthlyFee',
                 label: 'Monthly Fee',
-                render: (student) => `$${student.monthlyFee.toFixed(2)}`,
+                render: (student) => formatCurrency(student.monthlyFee),
               },
             ]}
             empty="No students yet"
