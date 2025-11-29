@@ -15,36 +15,29 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
-        <p className="mt-2 text-sm text-slate-500">Sign in to manage your hostels.</p>
-        <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Email</label>
-            <input
-              type="email"
-              {...register('email')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              required
-            />
+    <div className="mono-auth">
+      <div className="mono-auth__card mono-stack">
+        <div style={{ textAlign: 'center' }}>
+          <p className="mono-label">Hostelia</p>
+          <h1 className="mono-title">Welcome back</h1>
+          <p className="mono-subtitle">Sign in to manage your hostels.</p>
+        </div>
+        <form className="mono-stack mono-stack--tight" onSubmit={handleSubmit(onSubmit)}>
+          <div className="mono-field">
+            <label className="mono-label">Email</label>
+            <input type="email" {...register('email')} className="mono-input" required />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Password</label>
-            <input
-              type="password"
-              {...register('password')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              required
-            />
+          <div className="mono-field">
+            <label className="mono-label">Password</label>
+            <input type="password" {...register('password')} className="mono-input" required />
           </div>
-          <button className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white shadow-lg hover:bg-primary/90" type="submit">
-            Sign In
+          <button className="mono-button mono-button--solid" style={{ width: '100%', justifyContent: 'center' }} type="submit">
+            Sign in
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
+        <p className="mono-subtitle" style={{ textAlign: 'center' }}>
           New to Hostelia?{' '}
-          <Link to="/signup" className="font-semibold text-primary">
+          <Link to="/signup" style={{ textDecoration: 'underline' }}>
             Create an account
           </Link>
         </p>

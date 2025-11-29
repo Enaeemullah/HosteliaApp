@@ -22,71 +22,45 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-xl">
-        <h1 className="text-3xl font-bold text-slate-900">Create your Hostelia account</h1>
-        <p className="mt-2 text-sm text-slate-500">Sign up and onboard your first hostel in one step.</p>
-        <form className="mt-6 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700">Full name</label>
-            <input
-              type="text"
-              {...register('name')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-            />
+    <div className="mono-auth">
+      <div className="mono-auth__card mono-auth__card--wide mono-stack">
+        <div>
+          <p className="mono-label">Hostelia</p>
+          <h1 className="mono-title">Create your account</h1>
+          <p className="mono-subtitle">Sign up and onboard your first hostel in one step.</p>
+        </div>
+        <form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
+          <div className="mono-field md:col-span-2">
+            <label className="mono-label">Full name</label>
+            <input type="text" {...register('name')} className="mono-input" />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Email</label>
-            <input
-              type="email"
-              {...register('email')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              required
-            />
+          <div className="mono-field">
+            <label className="mono-label">Email</label>
+            <input type="email" {...register('email')} className="mono-input" required />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Password</label>
-            <input
-              type="password"
-              {...register('password')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              minLength={8}
-              required
-            />
+          <div className="mono-field">
+            <label className="mono-label">Password</label>
+            <input type="password" {...register('password')} className="mono-input" minLength={8} required />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Hostel name</label>
-            <input
-              type="text"
-              {...register('hostelName')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              required
-            />
+          <div className="mono-field">
+            <label className="mono-label">Hostel name</label>
+            <input type="text" {...register('hostelName')} className="mono-input" required />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Hostel address</label>
-            <input
-              type="text"
-              {...register('hostelAddress')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              required
-            />
+          <div className="mono-field">
+            <label className="mono-label">Hostel address</label>
+            <input type="text" {...register('hostelAddress')} className="mono-input" required />
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700">Description</label>
-            <textarea
-              {...register('hostelDescription')}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-primary focus:ring-primary"
-              rows={3}
-            />
+          <div className="mono-field md:col-span-2">
+            <label className="mono-label">Description</label>
+            <textarea {...register('hostelDescription')} className="mono-textarea" rows={3} />
           </div>
-          <button className="md:col-span-2 rounded-lg bg-primary px-4 py-2 font-semibold text-white shadow-lg hover:bg-primary/90" type="submit">
+          <button className="mono-button mono-button--solid md:col-span-2" style={{ justifyContent: 'center' }} type="submit">
             Sign up
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
+        <p className="mono-subtitle" style={{ textAlign: 'center' }}>
           Already have an account?{' '}
-          <Link to="/signin" className="font-semibold text-primary">
+          <Link to="/signin" style={{ textDecoration: 'underline' }}>
             Sign in
           </Link>
         </p>

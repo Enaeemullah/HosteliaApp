@@ -38,92 +38,93 @@ const HostelsPage = () => {
   return (
     <AppShell>
       <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold">Hostels</h1>
-          <p className="text-sm text-slate-500">Manage all the properties linked to your account.</p>
+        <div className="mono-stack">
+          <div>
+            <p className="mono-label">Inventory</p>
+            <h1 className="mono-title">Hostels</h1>
+            <p className="mono-subtitle">Manage all the properties linked to your account.</p>
+          </div>
 
-          <div className="space-y-3">
-            {loading && <p className="text-sm text-slate-500">Loading...</p>}
+          <div className="mono-stack">
+            {loading && <p className="mono-note">Loading...</p>}
             {hostels.map((hostel) => (
-              <div key={hostel.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div key={hostel.id} className="mono-panel mono-stack mono-stack--tight">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-lg font-semibold">{hostel.name}</p>
-                    <p className="text-sm text-slate-500">{hostel.address}</p>
+                    <p className="mono-label">Property</p>
+                    <p style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>{hostel.name}</p>
+                    <p className="mono-note">{hostel.address}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <button className="text-sm text-primary" onClick={() => startEdit(hostel)}>
+                  <div className="flex gap-3">
+                    <button className="mono-text-button" onClick={() => startEdit(hostel)}>
                       Edit
                     </button>
-                    <button className="text-sm text-red-500" onClick={() => onDelete(hostel)}>
+                    <button className="mono-text-button mono-text-button--danger" onClick={() => onDelete(hostel)}>
                       Delete
                     </button>
                   </div>
                 </div>
-                {hostel.description && <p className="mt-2 text-sm text-slate-600">{hostel.description}</p>}
+                {hostel.description && <p className="mono-subtitle">{hostel.description}</p>}
               </div>
             ))}
-            {!loading && !hostels.length && <p className="text-sm text-slate-500">No hostels yet.</p>}
+            {!loading && !hostels.length && <div className="mono-empty">No hostels yet.</div>}
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-xl font-semibold">Add hostel</h2>
-            <form className="mt-4 space-y-3" onSubmit={createForm.handleSubmit(onCreate)}>
-              <div>
-                <label className="text-sm font-medium">Name</label>
-                <input
-                  {...createForm.register('name', { required: true })}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-                />
+        <div className="mono-stack">
+          <div className="mono-panel mono-stack">
+            <div>
+              <p className="mono-label">Create</p>
+              <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                Add hostel
+              </h2>
+            </div>
+            <form className="mono-stack mono-stack--tight" onSubmit={createForm.handleSubmit(onCreate)}>
+              <div className="mono-field">
+                <label className="mono-label">Name</label>
+                <input {...createForm.register('name', { required: true })} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Address</label>
-                <input
-                  {...createForm.register('address', { required: true })}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-                />
+              <div className="mono-field">
+                <label className="mono-label">Address</label>
+                <input {...createForm.register('address', { required: true })} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Description</label>
-                <textarea
-                  {...createForm.register('description')}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-                  rows={3}
-                />
+              <div className="mono-field">
+                <label className="mono-label">Description</label>
+                <textarea {...createForm.register('description')} className="mono-textarea" rows={3} />
               </div>
-              <button className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white" type="submit">
+              <button className="mono-button mono-button--solid" type="submit">
                 Save hostel
               </button>
             </form>
           </div>
 
           {editing && (
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="mono-panel mono-stack">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">Edit {editing.name}</h2>
-                <button className="text-sm text-slate-500" onClick={() => setEditing(null)}>
+                <div>
+                  <p className="mono-label">Editing</p>
+                  <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                    {editing.name}
+                  </h2>
+                </div>
+                <button className="mono-text-button" onClick={() => setEditing(null)}>
                   Cancel
                 </button>
               </div>
-              <form className="mt-4 space-y-3" onSubmit={editForm.handleSubmit(onEdit)}>
-                <div>
-                  <label className="text-sm font-medium">Name</label>
-                  <input {...editForm.register('name', { required: true })} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+              <form className="mono-stack mono-stack--tight" onSubmit={editForm.handleSubmit(onEdit)}>
+                <div className="mono-field">
+                  <label className="mono-label">Name</label>
+                  <input {...editForm.register('name', { required: true })} className="mono-input" />
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Address</label>
-                  <input
-                    {...editForm.register('address', { required: true })}
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-                  />
+                <div className="mono-field">
+                  <label className="mono-label">Address</label>
+                  <input {...editForm.register('address', { required: true })} className="mono-input" />
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Description</label>
-                  <textarea {...editForm.register('description')} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" rows={3} />
+                <div className="mono-field">
+                  <label className="mono-label">Description</label>
+                  <textarea {...editForm.register('description')} className="mono-textarea" rows={3} />
                 </div>
-                <button className="w-full rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white" type="submit">
+                <button className="mono-button mono-button--solid" type="submit">
                   Update hostel
                 </button>
               </form>

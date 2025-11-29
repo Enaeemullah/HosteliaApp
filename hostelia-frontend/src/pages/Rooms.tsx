@@ -48,11 +48,12 @@ const RoomsPage = () => {
 
   return (
     <AppShell>
-      <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mono-stack">
+        <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold">Rooms</h1>
-            <p className="text-sm text-slate-500">Track capacity and occupancy per hostel.</p>
+            <p className="mono-label">Inventory</p>
+            <h1 className="mono-title">Rooms</h1>
+            <p className="mono-subtitle">Track capacity and occupancy per hostel.</p>
           </div>
           {hostels.length > 0 && selectedHostel && (
             <HostelSelector hostels={hostels} value={selectedHostel} onChange={setSelectedHostel} />
@@ -62,52 +63,56 @@ const RoomsPage = () => {
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
           <div className="grid gap-4 md:grid-cols-2">
             {rooms.map((room) => (
-              <div key={room.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div key={room.id} className="mono-panel mono-stack mono-stack--tight">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-slate-500">Room</p>
-                    <p className="text-2xl font-semibold">{room.roomNumber}</p>
+                    <p className="mono-label">Room</p>
+                    <p className="mono-metric__value" style={{ fontSize: '1.8rem' }}>
+                      {room.roomNumber}
+                    </p>
                   </div>
-                  <button className="text-sm text-red-500" onClick={() => remove(room)}>
+                  <button className="mono-text-button mono-text-button--danger" onClick={() => remove(room)}>
                     Delete
                   </button>
                 </div>
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mono-note">
                   Capacity {room.capacity} • Occupied {room.students?.length ?? 0}
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {room.students?.map((student) => (
-                    <span key={student.id} className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                    <span key={student.id} className="mono-chip">
                       {student.name}
                     </span>
                   ))}
-                  {!room.students?.length && <span className="text-xs text-slate-400">Vacant</span>}
+                  {!room.students?.length && <span className="mono-note">Vacant</span>}
                 </div>
               </div>
             ))}
-            {!rooms.length && <p className="text-sm text-slate-500">No rooms for this hostel yet.</p>}
+            {!rooms.length && <div className="mono-empty">No rooms for this hostel yet.</div>}
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-xl font-semibold">Add room</h2>
-            <form className="mt-4 space-y-3" onSubmit={form.handleSubmit(onCreate)}>
-              <div>
-                <label className="text-sm font-medium">Room number</label>
-                <input
-                  {...form.register('roomNumber', { required: true })}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
-                />
+          <div className="mono-panel mono-stack">
+            <div>
+              <p className="mono-label">Create</p>
+              <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                Add room
+              </h2>
+            </div>
+            <form className="mono-stack mono-stack--tight" onSubmit={form.handleSubmit(onCreate)}>
+              <div className="mono-field">
+                <label className="mono-label">Room number</label>
+                <input {...form.register('roomNumber', { required: true })} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Capacity</label>
+              <div className="mono-field">
+                <label className="mono-label">Capacity</label>
                 <input
                   type="number"
                   min={1}
                   {...form.register('capacity', { required: true, valueAsNumber: true })}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="mono-input"
                 />
               </div>
-              <button className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white" type="submit">
+              <button className="mono-button mono-button--solid" type="submit">
                 Save room
               </button>
             </form>

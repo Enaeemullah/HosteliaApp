@@ -9,22 +9,24 @@ const links = [
 ];
 
 export const Sidebar = () => (
-  <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col">
-    <div className="px-6 py-4 text-2xl font-bold text-primary">Hostelia</div>
-    <nav className="flex-1 space-y-1 px-4">
+  <aside className="mono-sidebar">
+    <div>
+      <p className="mono-sidebar__brand">Hostelia</p>
+      <p className="mono-sidebar__title">Control Center</p>
+    </div>
+
+    <nav className="mono-sidebar__nav">
       {links.map((link) => (
         <NavLink
           key={link.to}
           to={link.to}
-          className={({ isActive }) =>
-            `block rounded-lg px-3 py-2 text-sm font-medium ${
-              isActive ? 'bg-primary text-white' : 'text-slate-600 hover:bg-slate-100'
-            }`
-          }
+          className={({ isActive }) => ['mono-nav-link', isActive ? 'is-active' : ''].join(' ').trim()}
         >
           {link.label}
         </NavLink>
       ))}
     </nav>
+
+    <p className="mono-sidebar__footer">Operate, release, and monitor.</p>
   </aside>
 );

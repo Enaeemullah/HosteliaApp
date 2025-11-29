@@ -1,0 +1,13 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import SignIn from './pages/auth/SignIn';
+import SignUp from './pages/auth/SignUp';
+import Dashboard from './pages/Dashboard';
+import HostelsPage from './pages/Hostels';
+import RoomsPage from './pages/Rooms';
+import StudentsPage from './pages/Students';
+import FeePage from './pages/Fees';
+import ClientReleases from './pages/ClientReleases';
+import { ProtectedRoute } from './components/ProtectedRoute';
+const App = () => (_jsxs(Routes, { children: [_jsx(Route, { path: "/releases", element: _jsx(ClientReleases, {}) }), _jsx(Route, { path: "/signin", element: _jsx(SignIn, {}) }), _jsx(Route, { path: "/signup", element: _jsx(SignUp, {}) }), _jsxs(Route, { element: _jsx(ProtectedRoute, {}), children: [_jsx(Route, { path: "/", element: _jsx(Navigate, { to: "/dashboard", replace: true }) }), _jsx(Route, { path: "/dashboard", element: _jsx(Dashboard, {}) }), _jsx(Route, { path: "/hostels", element: _jsx(HostelsPage, {}) }), _jsx(Route, { path: "/rooms", element: _jsx(RoomsPage, {}) }), _jsx(Route, { path: "/students", element: _jsx(StudentsPage, {}) }), _jsx(Route, { path: "/fees", element: _jsx(FeePage, {}) })] }), _jsx(Route, { path: "*", element: _jsx(Navigate, { to: "/dashboard", replace: true }) })] }));
+export default App;

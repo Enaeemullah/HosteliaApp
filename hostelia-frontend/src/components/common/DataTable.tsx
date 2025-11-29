@@ -12,27 +12,23 @@ type Props<T> = {
 
 export function DataTable<T extends { id?: string }>({ data, columns, empty }: Props<T>) {
   if (!data.length) {
-    return <p className="text-sm text-slate-500">{empty || 'No records yet.'}</p>;
+    return <div className="mono-empty">{empty || 'No records yet.'}</div>;
   }
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-slate-200 text-sm">
-        <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <div className="mono-table-wrapper">
+      <table className="mono-table">
+        <thead>
           <tr>
             {columns.map((col) => (
-              <th key={col.key as string} className="px-4 py-2">
-                {col.label}
-              </th>
+              <th key={col.key as string}>{col.label}</th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
+        <tbody>
           {data.map((row) => (
             <tr key={row.id ?? JSON.stringify(row)}>
               {columns.map((col) => (
-                <td key={col.key as string} className="px-4 py-2">
-                  {col.render ? col.render(row) : (row[col.key] as React.ReactNode)}
-                </td>
+                <td key={col.key as string}>{col.render ? col.render(row) : (row[col.key] as React.ReactNode)}</td>
               ))}
             </tr>
           ))}
