@@ -1,0 +1,41 @@
+### Node / TypeScript dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Build outputs
+dist/
+build/
+coverage/
+.turbo/
+.next/
+tmp/
+temp/
+
+### Environment & secrets
+.env
+.env.*
+!.env.example
+
+### Tooling caches
+.eslintcache
+.tsbuildinfo
+.vite/
+
+### Editors
+.vscode/
+.idea/
+
+### OS files
+.DS_Store
+Thumbs.db
+
+### Project specific
+hostelia-backend/dist/
+hostelia-backend/node_modules/
+hostelia-frontend/dist/
+hostelia-frontend/node_modules/
+uploads/
+storage/
