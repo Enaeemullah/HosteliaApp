@@ -48,15 +48,16 @@ export class ReportsService {
     const occupiedRooms = Object.keys(studentsPerRoom).length;
     const vacantRooms = totalRooms - occupiedRooms;
 
-    let pendingAmount = { pending: 0 };
+    let pendingAmountRaw: { pending: number } | undefined;
     if (students.length) {
-      pendingAmount = await this.feesRepo
+      pendingAmountRaw = await this.feesRepo
         .createQueryBuilder('fee')
         .select('SUM(fee.amount)', 'pending')
         .where('fee.status != :status', { status: FeeStatus.PAID })
         .andWhere('fee.studentId IN (:...studentIds)', { studentIds: students.map((s) => s.id) })
         .getRawOne();
     }
+    const pendingAmount = Number(pendingAmountRaw?.pending ?? 0);
 
     return {
       hostel: { id: hostel.id, name: hostel.name },
@@ -66,7 +67,7 @@ export class ReportsService {
       occupiedRooms,
       vacantRooms,
       studentsPerRoom,
-      pendingAmount: Number(pendingAmount?.pending || 0),
+      pendingAmount,
     };
   }
 
