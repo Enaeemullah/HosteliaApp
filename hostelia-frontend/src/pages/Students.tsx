@@ -6,6 +6,7 @@ import { HostelSelector } from '../components/HostelSelector';
 import api from '../api/client';
 import { Room, Student } from '../types';
 import { DataTable } from '../components/common/DataTable';
+import { formatCurrency } from '../utils/formatCurrency';
 
 type StudentFormValues = {
   name: string;
@@ -93,7 +94,7 @@ const StudentsPage = () => {
                 {
                   key: 'monthlyFee',
                   label: 'Monthly Fee',
-                  render: (student) => `$${student.monthlyFee.toFixed(2)}`,
+                  render: (student) => formatCurrency(student.monthlyFee),
                 },
                 {
                   key: 'id',
