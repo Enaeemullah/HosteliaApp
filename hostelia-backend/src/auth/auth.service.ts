@@ -29,7 +29,6 @@ export class AuthService {
     await this.hostelsService.createForOwner(user, {
       name: dto.hostelName,
       address: dto.hostelAddress,
-      description: dto.hostelDescription,
     });
 
     return this.buildAuthResponse(user);

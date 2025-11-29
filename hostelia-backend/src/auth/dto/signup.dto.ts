@@ -15,7 +15,4 @@ export class SignupDto {
 
   @IsNotEmpty()
   hostelAddress: string;
-
-  @IsOptional()
-  hostelDescription?: string;
 }

@@ -25,6 +25,12 @@ export class Hostel {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
+  @Column({ nullable: true })
+  phone?: string;
+
+  @Column({ nullable: true })
+  logoUrl?: string;
+
   @ManyToOne(() => User, (user) => user.hostels, { onDelete: 'CASCADE' })
   owner: User;
 

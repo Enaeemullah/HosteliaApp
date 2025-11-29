@@ -76,7 +76,7 @@ export class FeesService {
 
   private async saveReceipt(fee: Fee, notes?: string) {
     if (fee.receipt) {
-      return this.receiptsRepo.save({ ...fee.receipt, notes });
+      return this.receiptsRepo.save({ ...fee.receipt, notes, paidOn: new Date() });
     }
     const receipt = this.receiptsRepo.create({
       fee,

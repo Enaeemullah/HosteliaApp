@@ -8,7 +8,6 @@ type SignupInput = SigninInput & {
   name?: string;
   hostelName: string;
   hostelAddress: string;
-  hostelDescription?: string;
 };
 
 type AuthContextValue = {

@@ -11,20 +11,35 @@ const HostelsPage = () => {
   const editForm = useForm<Omit<Hostel, 'id'>>();
   const [editing, setEditing] = useState<Hostel | null>(null);
 
+  const normalizePayload = (values: Omit<Hostel, 'id'>) => ({
+    ...values,
+    name: values.name.trim(),
+    address: values.address.trim(),
+    description: values.description?.trim() || undefined,
+    phone: values.phone?.trim() || undefined,
+    logoUrl: values.logoUrl?.trim() || undefined,
+  });
+
   const onCreate = async (values: Omit<Hostel, 'id'>) => {
-    await api.post('/hostels', values);
+    await api.post('/hostels', normalizePayload(values));
     createForm.reset();
     refetch();
   };
 
   const startEdit = (hostel: Hostel) => {
     setEditing(hostel);
-    editForm.reset({ name: hostel.name, address: hostel.address, description: hostel.description });
+    editForm.reset({
+      name: hostel.name,
+      address: hostel.address,
+      description: hostel.description,
+      phone: hostel.phone,
+      logoUrl: hostel.logoUrl,
+    });
   };
 
   const onEdit = async (values: Omit<Hostel, 'id'>) => {
     if (!editing) return;
-    await api.patch(`/hostels/${editing.id}`, values);
+    await api.patch(`/hostels/${editing.id}`, normalizePayload(values));
     setEditing(null);
     refetch();
   };
@@ -54,6 +69,11 @@ const HostelsPage = () => {
                     <p className="mono-label">Property</p>
                     <p style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>{hostel.name}</p>
                     <p className="mono-note">{hostel.address}</p>
+                    {hostel.phone && (
+                      <p className="mono-note" style={{ marginTop: 4 }}>
+                        Phone: {hostel.phone}
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-3">
                     <button className="mono-text-button" onClick={() => startEdit(hostel)}>
@@ -92,6 +112,19 @@ const HostelsPage = () => {
                 <label className="mono-label">Description</label>
                 <textarea {...createForm.register('description')} className="mono-textarea" rows={3} />
               </div>
+              <div className="mono-field">
+                <label className="mono-label">Phone</label>
+                <input {...createForm.register('phone')} className="mono-input" placeholder="+1 555-0100" />
+              </div>
+              <div className="mono-field">
+                <label className="mono-label">Logo URL</label>
+                <input
+                  {...createForm.register('logoUrl')}
+                  className="mono-input"
+                  placeholder="https://example.com/logo.png"
+                />
+                <p className="mono-note">Paste a publicly hosted image link (PNG, JPG, or SVG).</p>
+              </div>
               <button className="mono-button mono-button--solid" type="submit">
                 Save hostel
               </button>
@@ -123,6 +156,19 @@ const HostelsPage = () => {
                 <div className="mono-field">
                   <label className="mono-label">Description</label>
                   <textarea {...editForm.register('description')} className="mono-textarea" rows={3} />
+                </div>
+                <div className="mono-field">
+                  <label className="mono-label">Phone</label>
+                  <input {...editForm.register('phone')} className="mono-input" placeholder="+1 555-0100" />
+                </div>
+                <div className="mono-field">
+                  <label className="mono-label">Logo URL</label>
+                  <input
+                    {...editForm.register('logoUrl')}
+                    className="mono-input"
+                    placeholder="https://example.com/logo.png"
+                  />
+                  <p className="mono-note">Refreshes the sidebar badge instantly.</p>
                 </div>
                 <button className="mono-button mono-button--solid" type="submit">
                   Update hostel

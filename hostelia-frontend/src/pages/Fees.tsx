@@ -13,7 +13,7 @@ const FeePage = () => {
   const [selectedHostel, setSelectedHostel] = useState<string>();
   const [fees, setFees] = useState<Fee[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
-  const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [receipt, setReceipt] = useState<{ feeId: string; data: Receipt } | null>(null);
   const form = useForm<{ studentId: string; amount: number; dueDate: string }>();
   const selectedStudentId = form.watch('studentId');
 
@@ -38,6 +38,10 @@ const FeePage = () => {
     }
   }, [selectedHostel]);
 
+  useEffect(() => {
+    setReceipt(null);
+  }, [selectedHostel]);
+
   const onCreate = async (values: { studentId: string; amount: number; dueDate: string }) => {
     if (!selectedHostel) return;
     await api.post(`/hostels/${selectedHostel}/students/${values.studentId}/fees`, {
@@ -49,16 +53,36 @@ const FeePage = () => {
     fetchData(selectedHostel);
   };
 
+  const fetchReceipt = async (feeId: string) => {
+    if (!selectedHostel) return null;
+    const { data } = await api.get<Receipt>(`/hostels/${selectedHostel}/fees/${feeId}/receipt`);
+    return data;
+  };
+
+  const showReceipt = async (feeId: string) => {
+    const data = await fetchReceipt(feeId);
+    if (data) {
+      setReceipt({ feeId, data });
+    }
+  };
+
   const updateStatus = async (fee: Fee, status: 'paid' | 'pending' | 'overdue') => {
     if (!selectedHostel) return;
     await api.patch(`/hostels/${selectedHostel}/fees/${fee.id}`, { status });
-    fetchData(selectedHostel);
+    await fetchData(selectedHostel);
+    if (status === 'paid') {
+      try {
+        await showReceipt(fee.id);
+      } catch {
+        // Receipt endpoint might still be propagating; allow manual retry.
+      }
+    } else if (receipt?.feeId === fee.id) {
+      setReceipt(null);
+    }
   };
 
   const viewReceipt = async (fee: Fee) => {
-    if (!selectedHostel) return;
-    const { data } = await api.get(`/hostels/${selectedHostel}/fees/${fee.id}/receipt`);
-    setReceipt(data);
+    await showReceipt(fee.id);
   };
 
   return (
@@ -195,7 +219,7 @@ const FeePage = () => {
                   <div>
                     <p className="mono-label">Receipt</p>
                     <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
-                      {receipt.reference}
+                      {receipt.data.reference}
                     </h2>
                   </div>
                   <button className="mono-text-button" onClick={() => setReceipt(null)}>
@@ -207,14 +231,14 @@ const FeePage = () => {
                     <dt className="mono-label" style={{ marginBottom: 0 }}>
                       Paid on
                     </dt>
-                    <dd>{new Date(receipt.paidOn).toLocaleDateString()}</dd>
+                    <dd>{new Date(receipt.data.paidOn).toLocaleDateString()}</dd>
                   </div>
-                  {receipt.notes && (
+                  {receipt.data.notes && (
                     <div className="flex justify-between">
                       <dt className="mono-label" style={{ marginBottom: 0 }}>
                         Notes
                       </dt>
-                      <dd>{receipt.notes}</dd>
+                      <dd>{receipt.data.notes}</dd>
                     </div>
                   )}
                 </dl>

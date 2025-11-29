@@ -33,6 +33,9 @@ const FeePage = () => {
             fetchData(selectedHostel);
         }
     }, [selectedHostel]);
+    useEffect(() => {
+        setReceipt(null);
+    }, [selectedHostel]);
     const onCreate = async (values) => {
         if (!selectedHostel)
             return;
@@ -44,17 +47,37 @@ const FeePage = () => {
         form.reset();
         fetchData(selectedHostel);
     };
+    const fetchReceipt = async (feeId) => {
+        if (!selectedHostel)
+            return null;
+        const { data } = await api.get(`/hostels/${selectedHostel}/fees/${feeId}/receipt`);
+        return data;
+    };
+    const showReceipt = async (feeId) => {
+        const data = await fetchReceipt(feeId);
+        if (data) {
+            setReceipt({ feeId, data });
+        }
+    };
     const updateStatus = async (fee, status) => {
         if (!selectedHostel)
             return;
         await api.patch(`/hostels/${selectedHostel}/fees/${fee.id}`, { status });
-        fetchData(selectedHostel);
+        await fetchData(selectedHostel);
+        if (status === 'paid') {
+            try {
+                await showReceipt(fee.id);
+            }
+            catch {
+                // Receipt endpoint might still be propagating; allow manual retry.
+            }
+        }
+        else if (receipt?.feeId === fee.id) {
+            setReceipt(null);
+        }
     };
     const viewReceipt = async (fee) => {
-        if (!selectedHostel)
-            return;
-        const { data } = await api.get(`/hostels/${selectedHostel}/fees/${fee.id}/receipt`);
-        setReceipt(data);
+        await showReceipt(fee.id);
     };
     return (_jsx(AppShell, { children: _jsxs("div", { className: "mono-stack", children: [_jsxs("div", { className: "flex flex-wrap items-center justify-between gap-6", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Billing" }), _jsx("h1", { className: "mono-title", children: "Fees" }), _jsx("p", { className: "mono-subtitle", children: "Bill students monthly and log receipts." })] }), hostels.length > 0 && selectedHostel && (_jsx(HostelSelector, { hostels: hostels, value: selectedHostel, onChange: setSelectedHostel }))] }), _jsxs("div", { className: "grid gap-6 lg:grid-cols-[2fr,1fr]", children: [_jsx("div", { className: "mono-panel mono-stack", children: _jsx(DataTable, { data: fees, columns: [
                                     {
@@ -70,6 +93,8 @@ const FeePage = () => {
                                         label: 'Actions',
                                         render: (fee) => (_jsxs("div", { className: "flex flex-col gap-1 text-xs", children: [_jsxs("div", { className: "flex gap-2", children: [_jsx("button", { className: "mono-text-button", onClick: () => updateStatus(fee, 'paid'), children: "Mark paid" }), _jsx("button", { className: "mono-text-button", onClick: () => updateStatus(fee, 'pending'), children: "Pending" })] }), fee.status === 'paid' && (_jsx("button", { className: "mono-text-button", onClick: () => viewReceipt(fee), children: "View receipt" }))] })),
                                     },
-                                ], empty: "No fees yet" }) }), _jsxs("div", { className: "mono-stack", children: [_jsxs("div", { className: "mono-panel mono-stack", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Create" }), _jsx("h2", { className: "mono-title", style: { fontSize: '1.4rem' }, children: "Assign monthly fee" })] }), _jsxs("form", { className: "mono-stack mono-stack--tight", onSubmit: form.handleSubmit(onCreate), children: [_jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Student" }), _jsxs("select", { ...form.register('studentId', { required: true }), className: "mono-select", children: [_jsx("option", { value: "", children: "Select student" }), students.map((student) => (_jsx("option", { value: student.id, children: student.name }, student.id)))] })] }), _jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Amount" }), _jsx("input", { type: "number", step: "0.01", ...form.register('amount', { required: true, valueAsNumber: true }), className: "mono-input" })] }), _jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Due date" }), _jsx("input", { type: "date", ...form.register('dueDate', { required: true }), className: "mono-input" })] }), _jsx("button", { className: "mono-button mono-button--solid", type: "submit", children: "Assign fee" })] }), _jsxs("div", { className: "mono-stack mono-stack--tight", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Students" }), _jsx("p", { className: "mono-subtitle", style: { marginTop: 0 }, children: "Use the quick list to populate the selector above." })] }), students.length ? (_jsx("ul", { className: "mono-roster-list", children: students.map((student) => (_jsxs("li", { className: ['mono-roster-list__item', selectedStudentId === student.id ? 'is-active' : ''].join(' ').trim(), children: [_jsxs("div", { children: [_jsx("p", { className: "mono-roster-list__name", children: student.name }), _jsxs("p", { className: "mono-roster-list__meta", children: [student.rollNumber, " - ", formatCurrency(student.monthlyFee)] })] }), _jsx("button", { type: "button", className: "mono-text-button", onClick: () => form.setValue('studentId', student.id), children: "Use" })] }, student.id))) })) : (_jsx("div", { className: "mono-empty", children: "No students yet" }))] })] }), receipt && (_jsxs("div", { className: "mono-panel mono-stack", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Receipt" }), _jsx("h2", { className: "mono-title", style: { fontSize: '1.4rem' }, children: receipt.reference })] }), _jsx("button", { className: "mono-text-button", onClick: () => setReceipt(null), children: "Close" })] }), _jsxs("dl", { className: "space-y-2 text-sm", children: [_jsxs("div", { className: "flex justify-between", children: [_jsx("dt", { className: "mono-label", style: { marginBottom: 0 }, children: "Paid on" }), _jsx("dd", { children: new Date(receipt.paidOn).toLocaleDateString() })] }), receipt.notes && (_jsxs("div", { className: "flex justify-between", children: [_jsx("dt", { className: "mono-label", style: { marginBottom: 0 }, children: "Notes" }), _jsx("dd", { children: receipt.notes })] }))] })] }))] })] })] }) }));
+                                ], empty: "No fees yet" }) }), _jsxs("div", { className: "mono-stack", children: [_jsxs("div", { className: "mono-panel mono-stack", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Create" }), _jsx("h2", { className: "mono-title", style: { fontSize: '1.4rem' }, children: "Assign monthly fee" })] }), _jsxs("form", { className: "mono-stack mono-stack--tight", onSubmit: form.handleSubmit(onCreate), children: [_jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Student" }), _jsxs("select", { ...form.register('studentId', { required: true }), className: "mono-select", children: [_jsx("option", { value: "", children: "Select student" }), students.map((student) => (_jsx("option", { value: student.id, children: student.name }, student.id)))] })] }), _jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Amount" }), _jsx("input", { type: "number", step: "0.01", ...form.register('amount', { required: true, valueAsNumber: true }), className: "mono-input" })] }), _jsxs("div", { className: "mono-field", children: [_jsx("label", { className: "mono-label", children: "Due date" }), _jsx("input", { type: "date", ...form.register('dueDate', { required: true }), className: "mono-input" })] }), _jsx("button", { className: "mono-button mono-button--solid", type: "submit", children: "Assign fee" })] }), _jsxs("div", { className: "mono-stack mono-stack--tight", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Students" }), _jsx("p", { className: "mono-subtitle", style: { marginTop: 0 }, children: "Use the quick list to populate the selector above." })] }), students.length ? (_jsx("ul", { className: "mono-roster-list", children: students.map((student) => (_jsxs("li", { className: ['mono-roster-list__item', selectedStudentId === student.id ? 'is-active' : '']
+                                                            .join(' ')
+                                                            .trim(), children: [_jsxs("div", { children: [_jsx("p", { className: "mono-roster-list__name", children: student.name }), _jsxs("p", { className: "mono-roster-list__meta", children: [student.rollNumber, " - ", formatCurrency(student.monthlyFee)] })] }), _jsx("button", { type: "button", className: "mono-text-button", onClick: () => form.setValue('studentId', student.id), children: "Use" })] }, student.id))) })) : (_jsx("div", { className: "mono-empty", children: "No students yet" }))] })] }), receipt && (_jsxs("div", { className: "mono-panel mono-stack", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-label", children: "Receipt" }), _jsx("h2", { className: "mono-title", style: { fontSize: '1.4rem' }, children: receipt.data.reference })] }), _jsx("button", { className: "mono-text-button", onClick: () => setReceipt(null), children: "Close" })] }), _jsxs("dl", { className: "space-y-2 text-sm", children: [_jsxs("div", { className: "flex justify-between", children: [_jsx("dt", { className: "mono-label", style: { marginBottom: 0 }, children: "Paid on" }), _jsx("dd", { children: new Date(receipt.data.paidOn).toLocaleDateString() })] }), receipt.data.notes && (_jsxs("div", { className: "flex justify-between", children: [_jsx("dt", { className: "mono-label", style: { marginBottom: 0 }, children: "Notes" }), _jsx("dd", { children: receipt.data.notes })] }))] })] }))] })] })] }) }));
 };
 export default FeePage;

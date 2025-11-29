@@ -145,6 +145,17 @@ button {
   margin: 8px 0 0;
 }
 
+.mono-sidebar__logo {
+  display: block;
+  width: 120px;
+  height: auto;
+  margin: 12px 0;
+  border: 1px solid var(--mono-border);
+  padding: 10px;
+  background-color: #ffffff;
+  object-fit: contain;
+}
+
 .mono-sidebar__nav {
   display: flex;
   flex-direction: column;
