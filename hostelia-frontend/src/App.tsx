@@ -6,10 +6,12 @@ import HostelsPage from './pages/Hostels';
 import RoomsPage from './pages/Rooms';
 import StudentsPage from './pages/Students';
 import FeePage from './pages/Fees';
+import ClientReleases from './pages/ClientReleases';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 const App = () => (
   <Routes>
+    <Route path="/releases" element={<ClientReleases />} />
     <Route path="/signin" element={<SignIn />} />
     <Route path="/signup" element={<SignUp />} />
     <Route element={<ProtectedRoute />}>
