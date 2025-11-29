@@ -5,9 +5,9 @@ type Props = {
 };
 
 export const MetricCard = ({ label, value, helper }: Props) => (
-  <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-    <p className="text-sm text-slate-500">{label}</p>
-    <p className="text-3xl font-bold text-slate-900">{value}</p>
-    {helper && <p className="text-xs text-slate-400 mt-1">{helper}</p>}
+  <div className="mono-panel">
+    <p className="mono-label">{label}</p>
+    <p className="mono-metric__value">{value}</p>
+    {helper && <p className="mono-note">{helper}</p>}
   </div>
 );

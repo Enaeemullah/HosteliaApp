@@ -36,18 +36,23 @@ const Dashboard = () => {
   if (!hostels.length && !loading) {
     return (
       <AppShell>
-        <div className="rounded-lg bg-white p-6 shadow">Create your first hostel to view the dashboard.</div>
+        <div className="mono-panel mono-stack">
+          <p className="mono-label">Setup required</p>
+          <h2 className="mono-title">Add your first hostel</h2>
+          <p className="mono-subtitle">Create a hostel to unlock analytics, students, and fee tracking.</p>
+        </div>
       </AppShell>
     );
   }
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mono-stack">
+        <div className="flex flex-wrap items-start justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="text-sm text-slate-500">Track occupancy, students, and fees for each hostel.</p>
+            <p className="mono-label">Overview</p>
+            <h1 className="mono-title">Dashboard</h1>
+            <p className="mono-subtitle">Track occupancy, students, and fees for every property.</p>
           </div>
           {hostels.length > 0 && selectedHostel && (
             <HostelSelector hostels={hostels} value={selectedHostel} onChange={setSelectedHostel} />
@@ -55,7 +60,7 @@ const Dashboard = () => {
         </div>
 
         {summary && (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <MetricCard label="Total Students" value={summary.totalStudents} />
             <MetricCard label="Total Rooms" value={summary.totalRooms} helper={`${summary.occupiedRooms} occupied`} />
             <MetricCard label="Pending Fees" value={summary.pendingFees} helper={`$${summary.pendingAmount.toFixed(2)}`} />
@@ -64,34 +69,49 @@ const Dashboard = () => {
         )}
 
         {summary && (
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-xl font-semibold">Students per room</h2>
-            <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="mono-panel space-y-4">
+            <div>
+              <p className="mono-label">Occupancy</p>
+              <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                Students per room
+              </h2>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
               {Object.entries(summary.studentsPerRoom).map(([room, count]) => (
-                <div key={room} className="rounded-lg border border-slate-100 p-3">
-                  <p className="text-sm text-slate-500">Room {room}</p>
-                  <p className="text-2xl font-bold">{count}</p>
+                <div key={room} className="border border-black p-3">
+                  <p className="mono-label">Room {room}</p>
+                  <p className="mono-metric__value" style={{ fontSize: '1.75rem' }}>
+                    {count}
+                  </p>
                 </div>
               ))}
-              {!Object.keys(summary.studentsPerRoom).length && <p className="text-sm text-slate-500">Assign students to rooms to see usage.</p>}
+              {!Object.keys(summary.studentsPerRoom).length && <p className="mono-note">Assign students to rooms to see usage.</p>}
             </div>
           </div>
         )}
 
         {selectedHostel && (
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="mono-panel">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold">Fee reports</h2>
-                <p className="text-sm text-slate-500">Export CSV, Excel, or PDF summaries.</p>
+                <p className="mono-label">Reports</p>
+                <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                  Fee exports
+                </h2>
+                <p className="mono-subtitle">Export CSV, Excel, or PDF summaries.</p>
               </div>
               <ReportButtons hostelId={selectedHostel} />
             </div>
           </div>
         )}
 
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Students</h2>
+        <div className="mono-stack">
+          <div>
+            <p className="mono-label">Roster</p>
+            <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+              Students
+            </h2>
+          </div>
           <DataTable
             data={students}
             columns={[

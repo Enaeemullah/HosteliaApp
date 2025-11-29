@@ -7,12 +7,21 @@ import api from '../api/client';
 import { Room, Student } from '../types';
 import { DataTable } from '../components/common/DataTable';
 
+type StudentFormValues = {
+  name: string;
+  rollNumber: string;
+  email?: string;
+  phone?: string;
+  monthlyFee: number;
+  roomId?: string;
+};
+
 const StudentsPage = () => {
   const { hostels } = useHostels();
   const [selectedHostel, setSelectedHostel] = useState<string>();
   const [students, setStudents] = useState<Student[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
-  const form = useForm({ defaultValues: { monthlyFee: 0 } });
+  const form = useForm<StudentFormValues>({ defaultValues: { monthlyFee: 0 } });
 
   useEffect(() => {
     if (hostels.length && !selectedHostel) {
@@ -35,7 +44,7 @@ const StudentsPage = () => {
     }
   }, [selectedHostel]);
 
-  const onCreate = async (values: any) => {
+  const onCreate = async (values: StudentFormValues) => {
     if (!selectedHostel) return;
     await api.post(`/hostels/${selectedHostel}/students`, {
       ...values,
@@ -57,11 +66,12 @@ const StudentsPage = () => {
 
   return (
     <AppShell>
-      <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mono-stack">
+        <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold">Students</h1>
-            <p className="text-sm text-slate-500">Assign learners to rooms and track dues.</p>
+            <p className="mono-label">Roster</p>
+            <h1 className="mono-title">Students</h1>
+            <p className="mono-subtitle">Assign learners to rooms and track dues.</p>
           </div>
           {hostels.length > 0 && selectedHostel && (
             <HostelSelector hostels={hostels} value={selectedHostel} onChange={setSelectedHostel} />
@@ -69,7 +79,7 @@ const StudentsPage = () => {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-          <div className="space-y-4">
+          <div className="mono-panel mono-stack">
             <DataTable
               data={students}
               columns={[
@@ -89,7 +99,7 @@ const StudentsPage = () => {
                   key: 'id',
                   label: 'Actions',
                   render: (student) => (
-                    <button className="text-sm text-red-500" onClick={() => remove(student)}>
+                    <button className="mono-text-button mono-text-button--danger" onClick={() => remove(student)}>
                       Remove
                     </button>
                   ),
@@ -99,37 +109,42 @@ const StudentsPage = () => {
             />
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <h2 className="text-xl font-semibold">Add student</h2>
-            <form className="mt-4 space-y-3" onSubmit={form.handleSubmit(onCreate)}>
-              <div>
-                <label className="text-sm font-medium">Name</label>
-                <input {...form.register('name', { required: true })} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <div className="mono-panel mono-stack">
+            <div>
+              <p className="mono-label">Create</p>
+              <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                Add student
+              </h2>
+            </div>
+            <form className="mono-stack mono-stack--tight" onSubmit={form.handleSubmit(onCreate)}>
+              <div className="mono-field">
+                <label className="mono-label">Name</label>
+                <input {...form.register('name', { required: true })} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Roll number</label>
-                <input {...form.register('rollNumber', { required: true })} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+              <div className="mono-field">
+                <label className="mono-label">Roll number</label>
+                <input {...form.register('rollNumber', { required: true })} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <input type="email" {...form.register('email')} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+              <div className="mono-field">
+                <label className="mono-label">Email</label>
+                <input type="email" {...form.register('email')} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Phone</label>
-                <input {...form.register('phone')} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+              <div className="mono-field">
+                <label className="mono-label">Phone</label>
+                <input {...form.register('phone')} className="mono-input" />
               </div>
-              <div>
-                <label className="text-sm font-medium">Monthly fee</label>
+              <div className="mono-field">
+                <label className="mono-label">Monthly fee</label>
                 <input
                   type="number"
                   step="0.01"
                   {...form.register('monthlyFee', { required: true, valueAsNumber: true })}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                  className="mono-input"
                 />
               </div>
-              <div>
-                <label className="text-sm font-medium">Room (optional)</label>
-                <select {...form.register('roomId')} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2">
+              <div className="mono-field">
+                <label className="mono-label">Room (optional)</label>
+                <select {...form.register('roomId')} className="mono-select">
                   <option value="">Unassigned</option>
                   {roomOptions.map((room) => (
                     <option key={room.value} value={room.value}>
@@ -138,7 +153,7 @@ const StudentsPage = () => {
                   ))}
                 </select>
               </div>
-              <button className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white" type="submit">
+              <button className="mono-button mono-button--solid" type="submit">
                 Save student
               </button>
             </form>

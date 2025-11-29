@@ -32,7 +32,7 @@ export const ReportButtons = ({ hostelId }: Props) => {
         <button
           key={format.value}
           onClick={() => download(format.value)}
-          className="rounded-md border border-primary px-3 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+          className="mono-button"
         >
           Export {format.label}
         </button>

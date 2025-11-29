@@ -61,11 +61,12 @@ const FeePage = () => {
 
   return (
     <AppShell>
-      <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mono-stack">
+        <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold">Fees</h1>
-            <p className="text-sm text-slate-500">Bill students monthly and log receipts.</p>
+            <p className="mono-label">Billing</p>
+            <h1 className="mono-title">Fees</h1>
+            <p className="mono-subtitle">Bill students monthly and log receipts.</p>
           </div>
           {hostels.length > 0 && selectedHostel && (
             <HostelSelector hostels={hostels} value={selectedHostel} onChange={setSelectedHostel} />
@@ -73,7 +74,7 @@ const FeePage = () => {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-          <div>
+          <div className="mono-panel mono-stack">
             <DataTable
               data={fees}
               columns={[
@@ -91,15 +92,15 @@ const FeePage = () => {
                   render: (fee) => (
                     <div className="flex flex-col gap-1 text-xs">
                       <div className="flex gap-2">
-                        <button className="text-green-600" onClick={() => updateStatus(fee, 'paid')}>
+                        <button className="mono-text-button" onClick={() => updateStatus(fee, 'paid')}>
                           Mark paid
                         </button>
-                        <button className="text-amber-600" onClick={() => updateStatus(fee, 'pending')}>
+                        <button className="mono-text-button" onClick={() => updateStatus(fee, 'pending')}>
                           Pending
                         </button>
                       </div>
                       {fee.status === 'paid' && (
-                        <button className="text-primary" onClick={() => viewReceipt(fee)}>
+                        <button className="mono-text-button" onClick={() => viewReceipt(fee)}>
                           View receipt
                         </button>
                       )}
@@ -111,13 +112,18 @@ const FeePage = () => {
             />
           </div>
 
-          <div className="space-y-6">
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h2 className="text-xl font-semibold">Assign monthly fee</h2>
-              <form className="mt-4 space-y-3" onSubmit={form.handleSubmit(onCreate)}>
-                <div>
-                  <label className="text-sm font-medium">Student</label>
-                  <select {...form.register('studentId', { required: true })} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2">
+          <div className="mono-stack">
+            <div className="mono-panel mono-stack">
+              <div>
+                <p className="mono-label">Create</p>
+                <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                  Assign monthly fee
+                </h2>
+              </div>
+              <form className="mono-stack mono-stack--tight" onSubmit={form.handleSubmit(onCreate)}>
+                <div className="mono-field">
+                  <label className="mono-label">Student</label>
+                  <select {...form.register('studentId', { required: true })} className="mono-select">
                     <option value="">Select student</option>
                     {students.map((student) => (
                       <option key={student.id} value={student.id}>
@@ -126,46 +132,51 @@ const FeePage = () => {
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Amount</label>
+                <div className="mono-field">
+                  <label className="mono-label">Amount</label>
                   <input
                     type="number"
                     step="0.01"
                     {...form.register('amount', { required: true, valueAsNumber: true })}
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+                    className="mono-input"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium">Due date</label>
-                  <input type="date" {...form.register('dueDate', { required: true })} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+                <div className="mono-field">
+                  <label className="mono-label">Due date</label>
+                  <input type="date" {...form.register('dueDate', { required: true })} className="mono-input" />
                 </div>
-                <button className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white" type="submit">
+                <button className="mono-button mono-button--solid" type="submit">
                   Assign fee
                 </button>
               </form>
             </div>
 
             {receipt && (
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="mono-panel mono-stack">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">Receipt</h2>
-                  <button className="text-sm text-slate-500" onClick={() => setReceipt(null)}>
+                  <div>
+                    <p className="mono-label">Receipt</p>
+                    <h2 className="mono-title" style={{ fontSize: '1.4rem' }}>
+                      {receipt.reference}
+                    </h2>
+                  </div>
+                  <button className="mono-text-button" onClick={() => setReceipt(null)}>
                     Close
                   </button>
                 </div>
-                <dl className="mt-4 space-y-2 text-sm">
+                <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="font-medium text-slate-500">Reference</dt>
-                    <dd className="text-slate-900">{receipt.reference}</dd>
-                  </div>
-                  <div className="flex justify-between">
-                    <dt className="font-medium text-slate-500">Paid on</dt>
-                    <dd className="text-slate-900">{new Date(receipt.paidOn).toLocaleDateString()}</dd>
+                    <dt className="mono-label" style={{ marginBottom: 0 }}>
+                      Paid on
+                    </dt>
+                    <dd>{new Date(receipt.paidOn).toLocaleDateString()}</dd>
                   </div>
                   {receipt.notes && (
                     <div className="flex justify-between">
-                      <dt className="font-medium text-slate-500">Notes</dt>
-                      <dd className="text-slate-900">{receipt.notes}</dd>
+                      <dt className="mono-label" style={{ marginBottom: 0 }}>
+                        Notes
+                      </dt>
+                      <dd>{receipt.notes}</dd>
                     </div>
                   )}
                 </dl>
