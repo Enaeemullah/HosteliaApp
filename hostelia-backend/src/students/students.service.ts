@@ -21,16 +21,17 @@ export class StudentsService {
     const hostel = await this.hostelsService.findOneForOwner(hostelId, ownerId);
     let room: Room | undefined;
     if (dto.roomId) {
-      room = await this.roomsRepo.findOne({
+      const roomRecord = await this.roomsRepo.findOne({
         where: { id: dto.roomId, hostel: { id: hostelId } },
         relations: ['students'],
       });
-      if (!room) {
+      if (!roomRecord) {
         throw new NotFoundException('Room does not belong to this hostel');
       }
-      if (room.students.length >= room.capacity) {
+      if (roomRecord.students.length >= roomRecord.capacity) {
         throw new NotFoundException('Room is already at full capacity');
       }
+      room = roomRecord;
     }
     const student = this.repo.create({
       name: dto.name,
