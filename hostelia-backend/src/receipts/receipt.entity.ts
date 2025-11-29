@@ -4,6 +4,7 @@ import {
   Column,
   OneToOne,
   CreateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Fee } from '../fees/fee.entity';
 
@@ -22,6 +23,7 @@ export class Receipt {
   notes?: string;
 
   @OneToOne(() => Fee, (fee) => fee.receipt, { onDelete: 'CASCADE' })
+  @JoinColumn()
   fee: Fee;
 
   @CreateDateColumn()

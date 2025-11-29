@@ -6,7 +6,6 @@ import {
   OneToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinColumn,
 } from 'typeorm';
 import { Student } from '../students/student.entity';
 import { FeeStatus } from '../common/enums/fee-status.enum';
