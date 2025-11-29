@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useHostels } from '../../hooks/useHostels';
 
 const makeIcon = (paths: JSX.Element) => (
   <svg
@@ -186,26 +188,46 @@ const links = [
   },
 ];
 
-export const Sidebar = () => (
-  <aside className="mono-sidebar">
-    <div>
-      <p className="mono-sidebar__brand">Hostelia</p>
-      <p className="mono-sidebar__title">Control Center</p>
-    </div>
+export const Sidebar = () => {
+  const { hostels } = useHostels();
+  const [logoErrored, setLogoErrored] = useState(false);
+  const primaryHostel = hostels[0];
+  const logoUrl = primaryHostel?.logoUrl ?? null;
+  const showLogo = !!logoUrl && !logoErrored;
 
-    <nav className="mono-sidebar__nav">
-      {links.map((link) => (
-        <NavLink
-          key={link.to}
-          to={link.to}
-          className={({ isActive }) => ['mono-nav-link', isActive ? 'is-active' : ''].join(' ').trim()}
-        >
-          <span className="mono-nav-link__icon">{link.icon}</span>
-          <span className="mono-nav-link__label">{link.label}</span>
-        </NavLink>
-      ))}
-    </nav>
+  useEffect(() => {
+    setLogoErrored(false);
+  }, [logoUrl]);
 
-    <p className="mono-sidebar__footer">Operate, release, and monitor.</p>
-  </aside>
-);
+  return (
+    <aside className="mono-sidebar">
+      <div>
+        <p className="mono-sidebar__brand">Hostelia</p>
+        {showLogo && (
+          <img
+            src={logoUrl ?? undefined}
+            alt={`${primaryHostel?.name ?? 'Hostel'} logo`}
+            className="mono-sidebar__logo"
+            onError={() => setLogoErrored(true)}
+          />
+        )}
+        <p className="mono-sidebar__title">Control Center</p>
+      </div>
+
+      <nav className="mono-sidebar__nav">
+        {links.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            className={({ isActive }) => ['mono-nav-link', isActive ? 'is-active' : ''].join(' ').trim()}
+          >
+            <span className="mono-nav-link__icon">{link.icon}</span>
+            <span className="mono-nav-link__label">{link.label}</span>
+          </NavLink>
+        ))}
+      </nav>
+
+      <p className="mono-sidebar__footer">Operate, release, and monitor.</p>
+    </aside>
+  );
+};

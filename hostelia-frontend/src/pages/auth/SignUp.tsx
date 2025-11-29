@@ -8,7 +8,6 @@ type FormValues = {
   name?: string;
   hostelName: string;
   hostelAddress: string;
-  hostelDescription?: string;
 };
 
 const SignUp = () => {
@@ -49,10 +48,6 @@ const SignUp = () => {
           <div className="mono-field">
             <label className="mono-label">Hostel address</label>
             <input type="text" {...register('hostelAddress')} className="mono-input" required />
-          </div>
-          <div className="mono-field md:col-span-2">
-            <label className="mono-label">Description</label>
-            <textarea {...register('hostelDescription')} className="mono-textarea" rows={3} />
           </div>
           <button className="mono-button mono-button--solid md:col-span-2" style={{ justifyContent: 'center' }} type="submit">
             Sign up

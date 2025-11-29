@@ -1,5 +1,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useHostels } from '../../hooks/useHostels';
 const makeIcon = (paths) => (_jsx("svg", { viewBox: "0 0 24 24", width: "20", height: "20", fill: "none", "aria-hidden": "true", focusable: "false", children: paths }));
 const links = [
     {
@@ -28,4 +30,14 @@ const links = [
         icon: makeIcon(_jsxs(_Fragment, { children: [_jsx("path", { d: "M9 7h7a3 3 0 1 1 0 6h-5a3 3 0 1 0 0 6h7", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" }), _jsx("line", { x1: "12", y1: "3", x2: "12", y2: "21", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round" })] })),
     },
 ];
-export const Sidebar = () => (_jsxs("aside", { className: "mono-sidebar", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-sidebar__brand", children: "Hostelia" }), _jsx("p", { className: "mono-sidebar__title", children: "Control Center" })] }), _jsx("nav", { className: "mono-sidebar__nav", children: links.map((link) => (_jsxs(NavLink, { to: link.to, className: ({ isActive }) => ['mono-nav-link', isActive ? 'is-active' : ''].join(' ').trim(), children: [_jsx("span", { className: "mono-nav-link__icon", children: link.icon }), _jsx("span", { className: "mono-nav-link__label", children: link.label })] }, link.to))) }), _jsx("p", { className: "mono-sidebar__footer", children: "Operate, release, and monitor." })] }));
+export const Sidebar = () => {
+    const { hostels } = useHostels();
+    const [logoErrored, setLogoErrored] = useState(false);
+    const primaryHostel = hostels[0];
+    const logoUrl = primaryHostel?.logoUrl ?? null;
+    const showLogo = !!logoUrl && !logoErrored;
+    useEffect(() => {
+        setLogoErrored(false);
+    }, [logoUrl]);
+    return (_jsxs("aside", { className: "mono-sidebar", children: [_jsxs("div", { children: [_jsx("p", { className: "mono-sidebar__brand", children: "Hostelia" }), showLogo && (_jsx("img", { src: logoUrl, alt: `${primaryHostel?.name ?? 'Hostel'} logo`, className: "mono-sidebar__logo", onError: () => setLogoErrored(true) })), _jsx("p", { className: "mono-sidebar__title", children: "Control Center" })] }), _jsx("nav", { className: "mono-sidebar__nav", children: links.map((link) => (_jsxs(NavLink, { to: link.to, className: ({ isActive }) => ['mono-nav-link', isActive ? 'is-active' : ''].join(' ').trim(), children: [_jsx("span", { className: "mono-nav-link__icon", children: link.icon }), _jsx("span", { className: "mono-nav-link__label", children: link.label })] }, link.to))) }), _jsx("p", { className: "mono-sidebar__footer", children: "Operate, release, and monitor." })] }));
+};

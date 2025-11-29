@@ -3,6 +3,8 @@ export type Hostel = {
   name: string;
   address: string;
   description?: string;
+  phone?: string;
+  logoUrl?: string;
 };
 
 export type Room = {
